@@ -4,14 +4,21 @@ import os
 
 load_dotenv()
 
-os.getenv("GROQ2_API_KEY")
-
 client = Groq(
     api_key=os.getenv("GROQ2_API_KEY")
 )
 
+conversation_history = []
 
 def generate_reply(message):
+
+    conversation_history.append(
+        {
+            "role": "user",
+            "content": message
+        }
+    )
+
     response = client.chat.completions.create(
         model="llama-3.1-8b-instant",
 
@@ -22,13 +29,17 @@ def generate_reply(message):
                     "You are Moazzam's AI phone assistant. "
                     "Talk casually and briefly."
                 )
-            },
-
-            {
-                "role": "user",
-                "content": message
             }
-        ]
+        ] + conversation_history
     )
 
-    return response.choices[0].message.content
+    ai_reply = response.choices[0].message.content
+
+    conversation_history.append(
+        {
+            "role": "assistant",
+            "content": ai_reply
+        }
+    )
+
+    return ai_reply
