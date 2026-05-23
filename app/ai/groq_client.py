@@ -5,8 +5,10 @@ from app.storage.save_chat import save_message
 
 load_dotenv()
 
+groqi =os.getenv("GROQ2_API_KEY")
+
 client = Groq(
-    api_key=os.getenv("GROQ2_API_KEY")
+    api_key = groqi
 )
 
 conversation_history = []
